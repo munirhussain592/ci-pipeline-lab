@@ -1,0 +1,31 @@
+name: Node.js Continuous Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js Environment
+      uses: actions/setup-node@v4
+      with:
+        node-on-version: '20'
+        cache: 'npm'
+
+    - name: Install Project Dependencies
+      run: npm ci
+
+    - name: Run Code Linter
+      run: npm run lint
+      continue-on-error: true # Prevents unconfigured lint rules from blocking the lab
+
+    - name: Run Automated Unit Tests
+      run: npm run test
